@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strike a Date</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7A2622">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Strike a Date">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --paper:#F4EBDA;
+    --card:#FBF5E9;
+    --ink:#241B14;
+    --maroon:#7A2622;
+    --maroon-deep:#5A1B18;
+    --sulfur:#D98E2B;
+    --moss:#4C5B3C;
+    --line:rgba(36,27,20,0.18);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(36,27,20,0.08) 1px, transparent 0);
+    background-size:22px 22px;
+    color:var(--ink);
+    font-family:'Fraunces', serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+
+  .stage{
+    width:100%;
+    max-width:460px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:22px;
+  }
+
+  .eyebrow-mark{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:var(--maroon);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 12px;
+    margin-bottom:14px;
+    background:var(--card);
+  }
+
+  h1{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:900;
+    font-size:clamp(38px,9vw,54px);
+    line-height:0.92;
+    margin:0 0 8px;
+    color:var(--maroon-deep);
+    letter-spacing:-0.01em;
+  }
+
+  header p{
+    margin:0;
+    font-size:15px;
+    color:rgba(36,27,20,0.72);
+    font-style:italic;
+  }
+
+  .filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:22px 0;
+  }
+
+  .stamp{
+    font-family:'Space Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.02em;
+    padding:7px 13px;
+    border:1.5px solid var(--ink);
+    border-radius:3px;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transform:rotate(var(--r,0deg));
+    transition:transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .stamp:nth-child(2n){--r:-1.2deg;}
+  .stamp:nth-child(3n){--r:1.4deg;}
+  .stamp:hover{transform:rotate(0deg) scale(1.03);}
+  .stamp.active{
+    background:var(--maroon);
+    border-color:var(--maroon);
+    color:var(--card);
+  }
+
+  .book{
+    position:relative;
+    perspective:1400px;
+  }
+
+  .matchbook{
+    background:var(--card);
+    border-radius:6px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 18px 34px -18px rgba(36,27,20,0.55);
+    border:1.5px solid var(--ink);
+    padding:30px 26px 26px;
+    position:relative;
+    min-height:280px;
+    display:flex;
+    flex-direction:column;
+    transition:opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .matchbook::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    pointer-events:none;
+  }
+
+  .matchbook.flip-out{opacity:0; transform:translateY(6px) scale(0.98);}
+
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    font-family:'Space Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.05em;
+    color:var(--maroon);
+    margin-bottom:18px;
+  }
+
+  .idea-number{opacity:0.6;}
+
+  .idea-title{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px,6vw,32px);
+    line-height:1.02;
+    color:var(--ink);
+    margin:0 0 12px;
+  }
+
+  .idea-desc{
+    font-size:15.5px;
+    line-height:1.5;
+    color:rgba(36,27,20,0.85);
+    margin:0 0 20px;
+    flex-grow:1;
+  }
+
+  .idea-tags{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    font-family:'Space Mono', monospace;
+    font-size:10.5px;
+    color:var(--moss);
+    border-top:1px dashed var(--line);
+    padding-top:14px;
+  }
+
+  .idea-tags span::before{content:"— ";}
+
+  .actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+  }
+
+  .btn{
+    flex:1;
+    font-family:'Space Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.03em;
+    padding:14px 10px;
+    border-radius:4px;
+    border:1.5px solid var(--ink);
+    cursor:pointer;
+    background:var(--ink);
+    color:var(--paper);
+    transition:transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+
+  .btn.secondary{
+    background:transparent;
+    color:var(--ink);
+  }
+
+  .btn.saved{
+    background:var(--moss);
+    border-color:var(--moss);
+    color:var(--card);
+  }
+
+  footer{
+    text-align:center;
+    margin-top:22px;
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    color:rgba(36,27,20,0.5);
+  }
+
+  footer button{
+    background:none;
+    border:none;
+    text-decoration:underline;
+    font-family:inherit;
+    font-size:inherit;
+    color:inherit;
+    cursor:pointer;
+    padding:0;
+  }
+
+  .saved-drawer{
+    margin-top:14px;
+    background:var(--card);
+    border:1.5px solid var(--ink);
+    border-radius:6px;
+    padding:16px 18px;
+    display:none;
+  }
+  .saved-drawer.open{display:block;}
+  .saved-drawer h2{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-size:18px;
+    margin:0 0 10px;
+    color:var(--maroon-deep);
+  }
+  .saved-drawer ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .saved-drawer li{
+    font-size:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px dashed var(--line);
+    padding-bottom:8px;
+  }
+  .saved-drawer li:last-child{border-bottom:none;padding-bottom:0;}
+  .saved-drawer .remove{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    color:var(--maroon);
+    background:none;
+    border:none;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .saved-empty{font-size:13px;color:rgba(36,27,20,0.55);font-style:italic;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <header>
+    <div class="eyebrow-mark">✦ same book of matches, two time zones</div>
+    <h1>STRIKE A DATE</h1>
+    <p>For whenever the call is loaded and neither of you has a plan.</p>
+  </header>
+
+  <div class="filters" id="filters">
+    <button class="stamp active" data-filter="all">any night</button>
+    <button class="stamp" data-filter="cheap">low spend</button>
+    <button class="stamp" data-filter="active">get moving</button>
+    <button class="stamp" data-filter="cozy">low key</button>
+    <button class="stamp" data-filter="sync">do it together</button>
+  </div>
+
+  <div class="book">
+    <div class="matchbook" id="matchbook">
+      <div class="card-top">
+        <span class="idea-number" id="ideaNumber">No. 01</span>
+        <span id="ideaCategory">OUT &amp; ABOUT</span>
+      </div>
+      <h2 class="idea-title" id="ideaTitle">Loading…</h2>
+      <p class="idea-desc" id="ideaDesc"></p>
+      <div class="idea-tags" id="ideaTags"></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="drawBtn">Strike another</button>
+    <button class="btn secondary" id="saveBtn">Save this one</button>
+  </div>
+
+  <footer>
+    <button id="toggleSaved">view saved (<span id="savedCount">0</span>)</button>
+  </footer>
+
+  <div class="saved-drawer" id="savedDrawer">
+    <h2>Your book</h2>
+    <ul id="savedList"></ul>
+  </div>
+</div>
+
+<script>
+const IDEAS = [
+  {title:"Cook the same recipe on call", desc:"Same dish, two kitchens, video propped up on the counter. Eat together once the food's up.", tags:["sync","cozy"]},
+  {title:"Order each other dinner", desc:"Use a delivery app to send a meal to their door, blind. They do the same for you.", tags:["cheap","sync"]},
+  {title:"Watch party, synced countdown", desc:"Same movie, same start time, 3-2-1 over text before you both hit play.", tags:["sync","cozy","cheap"]},
+  {title:"Trade a mixtape", desc:"Ten songs each, no explanations allowed until the other has listened all the way through.", tags:["cheap","cozy"]},
+  {title:"Museum tour by video call", desc:"Walk through a museum's virtual collection together, narrate it like tour guides for each other.", tags:["sync","cheap"]},
+  {title:"Handwritten letter, snail mail only", desc:"No typing. Write it by hand, mail it, and don't mention what you wrote when you talk next.", tags:["cheap","cozy"]},
+  {title:"Same puzzle, different boxes", desc:"Buy identical puzzles, race to finish on call, first one done gives hints to the other.", tags:["sync","cozy"]},
+  {title:"Read the same book, one chapter at a time", desc:"Set a chapter-per-week pace and call to argue about it after each one.", tags:["cheap","cozy"]},
+  {title:"Video call scavenger hunt", desc:"Ten odd household items each, first to find all of theirs on camera wins.", tags:["sync","active","cheap"]},
+  {title:"Plan the reunion trip in detail", desc:"An hour mapping out exactly what you'll do the day you're next together.", tags:["cheap","cozy"]},
+  {title:"Workout on call", desc:"Same routine, same time, camera on for accountability. Loser buys the winner coffee for a week.", tags:["sync","active"]},
+  {title:"Cook for each other, swap recipes after", desc:"Surprise them with something you made, photograph it, send the recipe once they've guessed the ingredients.", tags:["cozy"]},
+  {title:"Online co-op game night", desc:"Pick something you can actually play together — couch co-op over screen share, or any online multiplayer.", tags:["sync","active"]},
+  {title:"Trivia night, self-hosted", desc:"Each of you writes ten questions about the other. Score it on your honor.", tags:["sync","cheap"]},
+  {title:"Stargaze on the phone", desc:"Step outside at the same time, even in different weather, and describe the sky to each other.", tags:["cheap","cozy"]},
+  {title:"Virtual gallery crawl", desc:"Pick three artists neither of you knows, look them up together, argue about favorites.", tags:["sync","cheap"]},
+  {title:"Care package, no warning", desc:"Small, cheap, specific to an inside joke. Mail it and wait for the reaction.", tags:["cheap"]},
+  {title:"Learn a language together", desc:"Same app, same lesson, compare scores after 20 minutes.", tags:["sync","cheap"]},
+  {title:"Coffee shop, same order", desc:"Each go to a local café, order the same drink, video call from your respective tables.", tags:["sync"]},
+  {title:"Draw each other, badly", desc:"Portraits over video call, five minutes, no erasing. Mail or text the results.", tags:["cheap","sync"]},
+  {title:"Plan a surprise for their next visit", desc:"One of you secretly plans a full day for when you're next in the same place.", tags:["cozy"]},
+  {title:"Karaoke, unmuted", desc:"Pick songs for each other, sing on camera, no hiding behind the microphone icon.", tags:["sync","active"]},
+  {title:"Photo diary swap", desc:"Send five photos from your week with zero context. Guess the story behind each one.", tags:["cheap","cozy"]},
+  {title:"Bake the same dessert", desc:"Split screen, same recipe, compare who's further behind the whole time.", tags:["sync","cozy"]},
+  {title:"Write a story together, one line at a time", desc:"Alternate sentences over text through the day, see where it ends up by night.", tags:["cheap","cozy"]},
+  {title:"Watch the sunrise or sunset apart, together", desc:"Whoever's is happening, the other watches too, over call, even at an odd hour.", tags:["cheap","cozy"]},
+  {title:"Virtual museum scavenger hunt", desc:"Pick a theme, race through an online collection to find matching pieces.", tags:["sync","active","cheap"]},
+  {title:"Plan next year, out loud", desc:"Talk through where you both want to be a year from now, no pressure to decide anything.", tags:["cozy"]},
+  {title:"Try the same new recipe from scratch", desc:"Neither of you has made it before. Compare disasters at the end.", tags:["sync","cozy"]},
+  {title:"Send a voice memo instead of texting", desc:"For one full day, replace texts with voice notes only. See how the conversation changes.", tags:["cheap"]}
+];
+
+let activeFilter = "all";
+let currentIdea = null;
+let saved = [];
+
+const titleEl = document.getElementById("ideaTitle");
+const descEl = document.getElementById("ideaDesc");
+const tagsEl = document.getElementById("ideaTags");
+const numberEl = document.getElementById("ideaNumber");
+const categoryEl = document.getElementById("ideaCategory");
+const matchbookEl = document.getElementById("matchbook");
+const saveBtn = document.getElementById("saveBtn");
+const savedCountEl = document.getElementById("savedCount");
+const savedListEl = document.getElementById("savedList");
+const savedDrawer = document.getElementById("savedDrawer");
+
+const CATEGORY_LABELS = {cheap:"LOW SPEND", active:"GET MOVING", cozy:"LOW KEY", sync:"DO IT TOGETHER"};
+
+let drawCount = 0;
+
+function filteredIdeas(){
+  if(activeFilter === "all") return IDEAS;
+  return IDEAS.filter(i => i.tags.includes(activeFilter));
+}
+
+function pickIdea(){
+  const pool = filteredIdeas();
+  let next;
+  do{
+    next = pool[Math.floor(Math.random() * pool.length)];
+  } while(pool.length > 1 && currentIdea && next.title === currentIdea.title);
+  return next;
+}
+
+function renderIdea(idea){
+  currentIdea = idea;
+  drawCount++;
+  numberEl.textContent = "No. " + String(drawCount).padStart(2,"0");
+  categoryEl.textContent = CATEGORY_LABELS[idea.tags[0]] || "ANY NIGHT";
+  titleEl.textContent = idea.title;
+  descEl.textContent = idea.desc;
+  tagsEl.innerHTML = idea.tags.map(t => `<span>${CATEGORY_LABELS[t] || t}</span>`).join("");
+  updateSaveBtn();
+}
+
+function draw(){
+  matchbookEl.classList.add("flip-out");
+  setTimeout(() => {
+    renderIdea(pickIdea());
+    matchbookEl.classList.remove("flip-out");
+  }, 160);
+}
+
+function updateSaveBtn(){
+  const isSaved = saved.some(i => i.title === currentIdea.title);
+  saveBtn.textContent = isSaved ? "Saved ✓" : "Save this one";
+  saveBtn.classList.toggle("saved", isSaved);
+}
+
+function renderSaved(){
+  savedCountEl.textContent = saved.length;
+  if(saved.length === 0){
+    savedListEl.innerHTML = `<li class="saved-empty">Nothing saved yet — strike a few matches first.</li>`;
+    return;
+  }
+  savedListEl.innerHTML = saved.map((idea, idx) => `
+    <li>
+      <span>${idea.title}</span>
+      <button class="remove" data-idx="${idx}">remove</button>
+    </li>
+  `).join("");
+}
+
+document.getElementById("filters").addEventListener("click", (e) => {
+  const btn = e.target.closest(".stamp");
+  if(!btn) return;
+  document.querySelectorAll(".stamp").forEach(s => s.classList.remove("active"));
+  btn.classList.add("active");
+  activeFilter = btn.dataset.filter;
+  draw();
+});
+
+document.getElementById("drawBtn").addEventListener("click", draw);
+
+saveBtn.addEventListener("click", () => {
+  const isSaved = saved.some(i => i.title === currentIdea.title);
+  if(isSaved){
+    saved = saved.filter(i => i.title !== currentIdea.title);
+  } else {
+    saved.push(currentIdea);
+  }
+  updateSaveBtn();
+  renderSaved();
+});
+
+document.getElementById("toggleSaved").addEventListener("click", () => {
+  savedDrawer.classList.toggle("open");
+});
+
+savedListEl.addEventListener("click", (e) => {
+  const btn = e.target.closest(".remove");
+  if(!btn) return;
+  const idx = parseInt(btn.dataset.idx, 10);
+  saved.splice(idx, 1);
+  renderSaved();
+  updateSaveBtn();
+});
+
+renderIdea(pickIdea());
+renderSaved();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
