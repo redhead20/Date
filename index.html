@@ -368,7 +368,36 @@ const IDEAS = [
   {title:"Do the thing you always plan and never do", desc:"Whatever's been sitting on the someday list — pick this visit to actually do it.", tags:["together"]},
   {title:"Long walk with no destination", desc:"Pick a street you've never walked down together and follow it until the light goes.", tags:["together","cheap","active"]},
   {title:"Board game gauntlet", desc:"Best of three, loser does dishes for the rest of the visit. Choose your games carefully.", tags:["together","cozy","cheap"]},
-  {title:"Sunrise instead of sunset", desc:"Set an alarm you'll regret, find a high point, bring something warm.", tags:["together","cheap"]}
+  {title:"Sunrise instead of sunset", desc:"Set an alarm you'll regret, find a high point, bring something warm.", tags:["together","cheap"]},
+  {title:"Group project: recreate a photo of you two", desc:"Pick an old photo, dress the part, restage it as close as you can.", tags:["together","cozy"]},
+  {title:"Cook breakfast for dinner", desc:"Full spread, pancakes and all, at 7pm instead of 7am.", tags:["together","cozy"]},
+  {title:"Drive with no destination", desc:"Pick a direction, set a time limit, turn around when it's up.", tags:["together","active"]},
+  {title:"Try the place with bad reviews", desc:"Find the 3.2-star restaurant nobody trusts and go find out why.", tags:["together","cheap"]},
+  {title:"Build something together", desc:"Furniture kit, birdhouse, shelf — anything with instructions and two sets of hands.", tags:["together","active"]},
+  {title:"Day trip, planned in an hour", desc:"Pick somewhere within two hours of you, leave before you can overthink it.", tags:["together","active"]},
+  {title:"Cook a whole meal blind", desc:"Neither of you looks at a recipe. Work from what you remember and what's in the fridge.", tags:["together","cozy"]},
+  {title:"Trade playlists and drive to them", desc:"Whoever's playlist is on, that person doesn't get to skip a single song.", tags:["together","active"]},
+  {title:"Video call your past selves", desc:"Record a message for each other to watch on your next anniversary.", tags:["sync","cozy"]},
+  {title:"Same show, staggered watch", desc:"Watch an episode apart, then call right after to react before looking anything up.", tags:["sync","cozy","cheap"]},
+  {title:"Cloud gaming date", desc:"Same online game, different consoles or phones, same server.", tags:["sync","active"]},
+  {title:"Quiz each other on the relationship", desc:"Write five questions about your history together, see who remembers better.", tags:["sync","cheap"]},
+  {title:"Virtual escape room", desc:"Book an online escape room session built for remote teams, solve it together on call.", tags:["sync","active"]},
+  {title:"Compare grocery hauls", desc:"Both go shopping separately, unpack on camera, guess what the other bought before they show you.", tags:["sync","cheap"]},
+  {title:"Same yoga or stretch video", desc:"Follow the same routine side by side on screen, no talking until it's done.", tags:["sync","active","cheap"]},
+  {title:"Write down five things you're grateful for, out loud", desc:"Trade lists on call, no explaining allowed until the other guesses why.", tags:["sync","cozy","cheap"]},
+  {title:"Pick a documentary and fact-check it together", desc:"Watch synced, pause to look things up, argue about what's true.", tags:["sync","cozy"]},
+  {title:"Compliment battle", desc:"Take turns finding something new to compliment about the other, loser is whoever runs out first.", tags:["sync","cheap"]},
+  {title:"Recreate a restaurant dish at home", desc:"Pick a favorite meal from a place you've eaten together, both attempt it from memory.", tags:["sync","cozy"]},
+  {title:"Window shop the same online store", desc:"Screen share or send links, build a wishlist together for no reason at all.", tags:["sync","cheap"]},
+  {title:"Free museum day", desc:"Check for a free admission day at a local museum and just go.", tags:["cheap","active"]},
+  {title:"Library date", desc:"Pick books for each other in ten minutes, read the first chapter together after.", tags:["cheap","cozy"]},
+  {title:"Public park, no plan", desc:"Just go sit somewhere outside and talk for an hour.", tags:["cheap","cozy"]},
+  {title:"Write each other a top five list", desc:"Top five memories, songs, or moments — trade and talk through them.", tags:["cheap","cozy"]},
+  {title:"Home spa night", desc:"Face masks, playlist, low lights — whatever counts as pampering in your house.", tags:["cheap","cozy"]},
+  {title:"Neighborhood 5k, walking pace fine", desc:"Set a route, time yourselves, beat it next time.", tags:["active","cheap"]},
+  {title:"Dance it out", desc:"Pick five songs, clear some floor space, no judgment.", tags:["active","cozy"]},
+  {title:"Stretch and talk", desc:"Ten minutes of stretching together, phones away, just conversation.", tags:["cozy","active"]},
+  {title:"Slow morning, no agenda", desc:"Whoever's together or on call, spend the first hour of the day with nothing planned.", tags:["cozy"]}
 ];
 
 let activeFilter = "all";
@@ -408,7 +437,9 @@ function renderIdea(idea){
   currentIdea = idea;
   drawCount++;
   numberEl.textContent = "No. " + String(drawCount).padStart(2,"0");
-  categoryEl.textContent = CATEGORY_LABELS[idea.tags[0]] || "ANY NIGHT";
+  categoryEl.textContent = activeFilter !== "all"
+    ? CATEGORY_LABELS[activeFilter]
+    : (CATEGORY_LABELS[idea.tags[0]] || "ANY NIGHT");
   titleEl.textContent = idea.title;
   descEl.textContent = idea.desc;
   tagsEl.innerHTML = idea.tags.map(t => `<span>${CATEGORY_LABELS[t] || t}</span>`).join("");
