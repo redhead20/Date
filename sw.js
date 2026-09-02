@@ -1,4 +1,4 @@
-const CACHE_NAME = "strike-a-date-v2";
+const CACHE_NAME = "strike-a-date-v3";
 const ASSETS = [
   "./",
   "./index.html",
