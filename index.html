@@ -296,6 +296,7 @@
     <button class="stamp" data-filter="active">get moving</button>
     <button class="stamp" data-filter="cozy">low key</button>
     <button class="stamp" data-filter="sync">do it together</button>
+    <button class="stamp" data-filter="together">in person</button>
   </div>
 
   <div class="book">
@@ -337,7 +338,7 @@ const IDEAS = [
   {title:"Read the same book, one chapter at a time", desc:"Set a chapter-per-week pace and call to argue about it after each one.", tags:["cheap","cozy"]},
   {title:"Video call scavenger hunt", desc:"Ten odd household items each, first to find all of theirs on camera wins.", tags:["sync","active","cheap"]},
   {title:"Plan the reunion trip in detail", desc:"An hour mapping out exactly what you'll do the day you're next together.", tags:["cheap","cozy"]},
-  {title:"Workout on call", desc:"Same routine, same time, camera on for accountability. Loser buys the winner coffee for a week.", tags:["sync","active"]},
+  {title:"Workout on call", desc:"Same routine, same time, camera on for accountability. Loser picks the next movie night for a week.", tags:["sync","active"]},
   {title:"Cook for each other, swap recipes after", desc:"Surprise them with something you made, photograph it, send the recipe once they've guessed the ingredients.", tags:["cozy"]},
   {title:"Online co-op game night", desc:"Pick something you can actually play together — couch co-op over screen share, or any online multiplayer.", tags:["sync","active"]},
   {title:"Trivia night, self-hosted", desc:"Each of you writes ten questions about the other. Score it on your honor.", tags:["sync","cheap"]},
@@ -345,7 +346,7 @@ const IDEAS = [
   {title:"Virtual gallery crawl", desc:"Pick three artists neither of you knows, look them up together, argue about favorites.", tags:["sync","cheap"]},
   {title:"Care package, no warning", desc:"Small, cheap, specific to an inside joke. Mail it and wait for the reaction.", tags:["cheap"]},
   {title:"Learn a language together", desc:"Same app, same lesson, compare scores after 20 minutes.", tags:["sync","cheap"]},
-  {title:"Coffee shop, same order", desc:"Each go to a local café, order the same drink, video call from your respective tables.", tags:["sync"]},
+  {title:"Bakery run, same order", desc:"Each go to a local bakery or café, order the same pastry or snack, video call from your respective tables.", tags:["sync"]},
   {title:"Draw each other, badly", desc:"Portraits over video call, five minutes, no erasing. Mail or text the results.", tags:["cheap","sync"]},
   {title:"Plan a surprise for their next visit", desc:"One of you secretly plans a full day for when you're next in the same place.", tags:["cozy"]},
   {title:"Karaoke, unmuted", desc:"Pick songs for each other, sing on camera, no hiding behind the microphone icon.", tags:["sync","active"]},
@@ -356,7 +357,18 @@ const IDEAS = [
   {title:"Virtual museum scavenger hunt", desc:"Pick a theme, race through an online collection to find matching pieces.", tags:["sync","active","cheap"]},
   {title:"Plan next year, out loud", desc:"Talk through where you both want to be a year from now, no pressure to decide anything.", tags:["cozy"]},
   {title:"Try the same new recipe from scratch", desc:"Neither of you has made it before. Compare disasters at the end.", tags:["sync","cozy"]},
-  {title:"Send a voice memo instead of texting", desc:"For one full day, replace texts with voice notes only. See how the conversation changes.", tags:["cheap"]}
+  {title:"Send a voice memo instead of texting", desc:"For one full day, replace texts with voice notes only. See how the conversation changes.", tags:["cheap"]},
+  {title:"Cook the meal you've been planning over call", desc:"All those recipes you talked about trying — finally make one, together, in the same kitchen.", tags:["together","cozy"]},
+  {title:"Recreate your first date", desc:"Same order, same seats if you can get them. Compare notes on what's changed since.", tags:["together"]},
+  {title:"No-phone day", desc:"Phones off from morning to night. See how much slower the day feels.", tags:["together","cozy"]},
+  {title:"New neighborhood, no destination", desc:"Pick a bus or train line neither of you has ridden and get off somewhere that looks interesting.", tags:["together","active","cheap"]},
+  {title:"Open the letters you mailed each other", desc:"If you saved any handwritten letters from apart, read them out loud together now.", tags:["together","cozy"]},
+  {title:"Photo scavenger hunt, in person this time", desc:"Ten odd things to photograph, split up for 30 minutes, compare results.", tags:["together","active","cheap"]},
+  {title:"Cook the dish from the video call cook-along", desc:"Make it again, same recipe, but finally in the same room.", tags:["together","cozy"]},
+  {title:"Do the thing you always plan and never do", desc:"Whatever's been sitting on the someday list — pick this visit to actually do it.", tags:["together"]},
+  {title:"Long walk with no destination", desc:"Pick a street you've never walked down together and follow it until the light goes.", tags:["together","cheap","active"]},
+  {title:"Board game gauntlet", desc:"Best of three, loser does dishes for the rest of the visit. Choose your games carefully.", tags:["together","cozy","cheap"]},
+  {title:"Sunrise instead of sunset", desc:"Set an alarm you'll regret, find a high point, bring something warm.", tags:["together","cheap"]}
 ];
 
 let activeFilter = "all";
@@ -374,7 +386,7 @@ const savedCountEl = document.getElementById("savedCount");
 const savedListEl = document.getElementById("savedList");
 const savedDrawer = document.getElementById("savedDrawer");
 
-const CATEGORY_LABELS = {cheap:"LOW SPEND", active:"GET MOVING", cozy:"LOW KEY", sync:"DO IT TOGETHER"};
+const CATEGORY_LABELS = {cheap:"LOW SPEND", active:"GET MOVING", cozy:"LOW KEY", sync:"DO IT TOGETHER", together:"IN PERSON"};
 
 let drawCount = 0;
 
